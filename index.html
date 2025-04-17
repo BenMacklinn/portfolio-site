@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            background: rgb(37 99 235);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline-container::before {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <!-- Hero Section -->
+    <section id="hero" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <canvas id="particleCanvas" class="absolute inset-0"></canvas>
+        <div class="relative z-10 text-center px-4">
+            <h1 class="text-6xl font-bold mb-4">Hi, I'm <span class="text-blue-400">Ben Macklin</span></h1>
+            <p class="text-xl text-gray-300 mb-8">Computer Engineering Student @ Queen's University with a Passion for Robotics</p>
+            <div class="flex gap-4 justify-center">
+                <a href="#projects" class="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">View My Journey</a>
+                <a href="#contact" class="px-6 py-3 border border-blue-600 rounded-lg hover:bg-blue-600/20 transition-colors">Contact Me</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Timeline Section -->
+    <section id="projects" class="relative z-10 py-20 px-4 bg-black/90">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold mb-16 text-center">My Journey</h2>
+            <div class="timeline-container relative">
+                <!-- Project 1 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right order-2 md:order-1">
+                            <div class="bg-gray-900 p-6 rounded-xl shadow-lg">
+                                <span class="text-blue-400 text-sm font-semibold">The Beginning</span>
+                                <h3 class="text-2xl font-bold text-blue-400 mt-2">Kitchen Vision Alert System</h3>
+                                <p class="mt-2 text-gray-300">My journey into computer vision began with a common roommate challenge - dirty dishes. I developed an alert system that could detect when dishes were left on the counter, and by who, sending friendly reminders to keep our space clean. This project sparked my fascination with computer vision's potential to solve everyday problems, setting me on a path that would grow far beyond simple detection systems.</p>
+                            </div>
+                        </div>
+                        <div class="order-1 md:order-2">
+                            <div class="space-y-4">
+                                <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
+                                    <video class="h-full w-full object-cover" controls muted>
+                                        <source src="images/Kitchen.mp4" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-blue-600 rounded-full border-4 border-black z-20 hidden md:block"></div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="order-2">
+                            <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
+                                <img src="images/Ironman.jpg" alt="Gesture Control System" class="h-full w-full object-cover">
+                            </div>
+                        </div>
+                        <div class="order-1">
+                            <div class="bg-gray-900 p-6 rounded-xl shadow-lg">
+                                <span class="text-blue-400 text-sm font-semibold">The Evolution</span>
+                                <h3 class="text-2xl font-bold text-blue-400 mt-2">Gesture-Controlled Media System</h3>
+                                <p class="mt-2 text-gray-300">Inspired by Tony Stark's holographic interfaces, I pushed my computer vision skills further by creating a gesture-based control system. Using just hand movements, I could now control my computer's volume, play/pause media, and skip through playlists. This project transformed how I interacted with my computer, making me feel one step closer to that sci-fi future I'd always dreamed of.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-blue-600 rounded-full border-4 border-black z-20 hidden md:block"></div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right order-2 md:order-1">
+                            <div class="bg-gray-900 p-6 rounded-xl shadow-lg">
+                                <span class="text-blue-400 text-sm font-semibold">The Bridge</span>
+                                <h3 class="text-2xl font-bold text-blue-400 mt-2">Gesture-Controlled Smart Lighting</h3>
+                                <p class="mt-2 text-gray-300">Ready to bridge the gap between software and hardware, I created a system that controlled my room's LED lights through simple hand gestures. With just a pinch of my fingers, I could turn lights on/off and cycle through colors. This project marked my first step into the physical world, combining computer vision with real-world hardware control.</p>
+                            </div>
+                        </div>
+                        <div class="order-1 md:order-2">
+                            <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
+                                <img src="images/LEDLights.jpg" alt="Smart Lighting Control" class="h-full w-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-blue-600 rounded-full border-4 border-black z-20 hidden md:block"></div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="order-2">
+                            <div class="flex justify-center">
+                                <div class="w-[33vh] max-w-full">
+                                    <div class="aspect-[9/16] overflow-hidden rounded-xl shadow-lg bg-gray-900">
+                                        <video class="h-full w-full object-contain" controls muted playsinline>
+                                            <source src="images/IMG_3431 3.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-1">
+                            <div class="bg-gray-900 p-6 rounded-xl shadow-lg">
+                                <span class="text-blue-400 text-sm font-semibold">The Breakthrough</span>
+                                <h3 class="text-2xl font-bold text-blue-400 mt-2">Robotic Hand</h3>
+                                <p class="mt-2 text-gray-300">My most ambitious project yet combined everything I'd learned: a 3D-printed robotic hand that mirrors human hand movements in real-time. This project merged computer vision, hardware control, and some mechanical learning into one cohesive system. Watching the robotic hand move in perfect sync with my own was a defining moment that confirmed my passion for creating robots that can interact naturally with humans.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-blue-600 rounded-full border-4 border-black z-20 hidden md:block"></div>
+                </div>
+
+                <!-- Project 5 (In Progress) -->
+                <div class="relative z-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right order-2 md:order-1">
+                            <div class="bg-gray-900 p-6 rounded-xl shadow-lg">
+                                <span class="text-blue-400 text-sm font-semibold">The Future</span>
+                                <h3 class="text-2xl font-bold text-blue-400 mt-2">Bipedal Robot</h3>
+                                <p class="mt-2 text-gray-300">Inspired by Nvidia and Disney's collaboration "Blue," I'm currently developing my most technically challenging project yet: a bipedal robot. This project represents everything I've learned about robotics, computer vision, and control systems, pushing me to new heights in mechanical design and AI integration. While still in development, this project embodies my commitment to creating increasingly sophisticated robotic systems.</p>
+                                <div class="mt-4 flex gap-4 md:justify-end">
+                                    <span class="text-blue-400">In Development</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-1 md:order-2">
+                            <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
+                                <img src="images/Blue.jpg" alt="Bipedal Robot Concept" class="h-full w-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-blue-600 rounded-full border-4 border-black z-20 hidden md:block"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="relative z-10 py-20 px-4 bg-black/90">
+        <div class="max-w-2xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-8">Get in Touch</h2>
+            <p class="text-gray-300 mb-8">Feel free to reach out for collaborations or just a friendly hello</p>
+            <div class="flex gap-4 justify-center">
+                <a href="mailto:benvmacklin@gmail.com" class="text-blue-400 hover:text-blue-300">Email</a>
+                <a href="https://www.linkedin.com/in/ben-macklin-927576297/" class="text-blue-400 hover:text-blue-300">LinkedIn</a>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html> 
