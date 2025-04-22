@@ -1,7 +1,8 @@
 /* =========================================================
    Waves + Fish + Comets animation
    ── smoother; comet has glow+gradient tail, fish keep outline
-      + “magnet” mouse‑repulsion on wave particles
+      + "magnet" mouse‑repulsion on wave particles
+   ── responsive: scales correctly on devices with different DPRs
    ========================================================= */
 
    class Particle {
@@ -20,8 +21,8 @@
     update(t, rX, rY) {
         /* wave form */
         const baseF = 0.015, tS = 0.03;
-        let waveY = Math.sin(this.baseZ * baseF + t * tS) * 25 +
-                    Math.sin(this.baseX * baseF + t * tS * 1.2) * 15;
+        let waveY = Math.sin(this.baseZ * baseF + t * tS) * 22 +
+                    Math.sin(this.baseX * baseF + t * tS * 1.2) * 14;
 
         /* spring decay from splashes */
         this.ox += this.vx; this.oy += this.vy;
@@ -40,21 +41,36 @@
         [ry, rz] = [ry * cX - rz * sX, ry * sX + rz * cX];
 
         const view = 2000, sc = Math.max(0, Math.min(1, (view - rz) / view));
-        const cx = canvas.width / 2, cy = canvas.height * 0.5;
+        const cx = canvas.width / (2 * dpr), cy = canvas.height * 0.4 / dpr;
         this.screenX = cx + rx * sc;
         this.screenY = cy + ry * sc;
         this.size    = 1.1 * sc;
-        this.alpha   = sc * 0.9;
+        
+        // Calculate base alpha with perspective
+        this.alpha = sc * 0.9;
+        
+        // Adjust the fade-out to be more subtle across the extended canvas
+        // Start the fade at 60% of the way down (40% of the screen is still fully visible)
+        const fadeStartY = canvas.height * 0.6 / dpr;
+        const fadeEndY = canvas.height * 0.95 / dpr;  // Extend the fade almost to the bottom
+        
+        // Apply fade-out if particle is in the bottom fade zone
+        if (this.screenY > fadeStartY) {
+            // Calculate how far into the fade zone (0 to 1)
+            const fadePercent = (this.screenY - fadeStartY) / (fadeEndY - fadeStartY);
+            // Apply softer exponential fade for a more gradual effect
+            this.alpha *= Math.max(0, 1 - Math.pow(fadePercent, 4));
+        }
 
-        /* ~~~~~ mouse‑repulsion (“magnet”) ~~~~~ */
+        /* ~~~~~ mouse‑repulsion ("magnet") ~~~~~ */
         if (mouse.x !== undefined) {
             const dx = this.screenX - mouse.x,
                   dy = this.screenY - mouse.y,
                   dist = Math.hypot(dx, dy),
-                  radius = 50;                 // interaction radius
+                  radius = 50;
             if (dist < radius && dist > 0) {
-                const force = (1 - dist / radius) * 5;   // push strength
-                this.screenX += (dx / dist) * force * 9; // multiply for visible shove
+                const force = (1 - dist / radius) * 5;
+                this.screenX += (dx / dist) * force * 9;
                 this.screenY += (dy / dist) * force * 9;
             }
         }
@@ -68,28 +84,25 @@
     }
 }
 
-/* -------- FISH (blue, white 8‑pt trail, white outline) -------- */
 class Fish {
     constructor(dir) {
         this.dir = dir; this.start = time;
         this.depth = 0.2 + Math.random() * 0.8;
-        const sky = canvas.height * 0.15,
-              mid = canvas.height * 0.45,
+        const sky = canvas.height * 0.15 / dpr,
+              mid = canvas.height * 0.45 / dpr,
               high = Math.random() < 0.5;
         this.y0 = high ? sky + this.depth * 120
                        : mid + (this.depth - 0.5) * 160;
 
-        const baseDist = canvas.width * (0.12 + 0.08 * this.depth);
-        this.totalX = baseDist * (1.2 + Math.random() * 1.9);
-        const pxPerFr = 8 + Math.random() * 2;
+        const baseDist = canvas.width * (0.12 + 0.08 * this.depth) / dpr;
+        this.totalX = baseDist * (2.5 + Math.random() * 3);
+        const pxPerFr = 6 + Math.random() * 2;
         this.dur = this.totalX / pxPerFr;
 
-        const hBase = high ? 50 : 30;
-        this.apex = (hBase * this.depth + 10) * (0.8 + Math.random() * 0.5);
+        this.apex = Math.random() < 0.5 ? 80 : 30;
+        this.scale = Math.min(1.3, Math.max(0.3, this.y0 / (canvas.height * 0.5 / dpr)));
 
-        this.scale = Math.min(1.3, Math.max(0.3, this.y0 / (canvas.height * 0.5)));
-
-        this.x0   = dir === 1 ? -30 : canvas.width + 30;
+        this.x0   = dir === 1 ? -30 : canvas.width / dpr + 30;
         this.endX = this.x0 + this.dir * this.totalX;
 
         this.trail = Array(8).fill(null); this.tp = 0;
@@ -140,7 +153,6 @@ class Fish {
     }
 }
 
-/* ---------------- SPLASH ---------------- */
 class Splash {
     constructor(x, y, maxR = 200) { this.x = x; this.y = y; this.r = 6; this.maxR = maxR; }
     update() {
@@ -154,91 +166,40 @@ class Splash {
     draw() {}
 }
 
-/* ---------------- COMET – mystical multicolour tail ---------------- */
-class Comet {
-    constructor() {
-        this.waterY = canvas.height * 0.23;
-        this.xImpact = canvas.width * 0.25 + Math.random() * canvas.width * 0.50;
-        const off = canvas.width * 0.55;
-        this.dir = this.xImpact < canvas.width / 2 ? 1 : -1;
-        this.x   = this.dir === 1 ? -off : canvas.width + off;
-        this.y   = canvas.height * (0.05 + Math.random() * 0.05);
-
-        const dx = this.xImpact - this.x,
-              dy = this.waterY - this.y,
-              speed = 18 + Math.random() * 9,
-              mag = Math.hypot(dx, dy);
-
-        this.vx = (dx / mag) * speed;
-        this.vy = (dy / mag) * speed;
-
-        this.trail = [];
-        this.alive = true;
-    }
-    update() {
-        if (!this.alive) return false;
-
-        let nextX = this.x + this.vx,
-            nextY = this.y + this.vy;
-
-        if (nextY >= this.waterY) {
-            const over = nextY - this.waterY,
-                  frac = over / this.vy;
-            nextX = this.x + this.vx * (1 - frac);
-            nextY = this.waterY;
-            splashes.push(new Splash(nextX, nextY, 220));
-            this.alive = false;
-        }
-
-        this.x = nextX;
-        this.y = nextY;
-
-        this.trail.push({ x: this.x, y: this.y });
-        if (this.trail.length > 25) this.trail.shift();
-        return true;
-    }
-    draw(ctx) {
-        if (this.trail.length > 1) {
-            const first = this.trail[0];
-            const g = ctx.createLinearGradient(this.x, this.y, first.x, first.y);
-            g.addColorStop(0.00, 'rgba(255,255,255,0.95)');
-            g.addColorStop(0.20, '#a7f3d0');   // mint
-            g.addColorStop(0.40, '#34d399');   // emerald
-            g.addColorStop(0.60, '#38bdf8');   // sky
-            g.addColorStop(0.80, '#7dd3fc');   // light‑cyan
-            g.addColorStop(1.00, 'rgba(59,130,246,0)');
-            ctx.strokeStyle = g;
-            ctx.lineWidth = 2.4;
-            ctx.beginPath();
-            this.trail.forEach((pt, i) => i ? ctx.lineTo(pt.x, pt.y) : ctx.moveTo(pt.x, pt.y));
-            ctx.stroke();
-        }
-        ctx.save();
-        ctx.shadowColor = 'rgba(125,211,252,0.8)';
-        ctx.shadowBlur  = 14;
-        ctx.fillStyle   = '#67e8f9';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 3.2, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.restore();
-    }
-}
-
-/* --------------- GLOBALS & INIT --------------- */
-let canvas, ctx; const particles = [], fishes = [], comets = [], splashes = [];
+// Variables for the main wave/fish animation
+let canvas, ctx; const particles = [], fishes = [], splashes = [];
 let time = 0;
 const ROT_X = 0.5, ROT_Y = 0.0;
 const mouse = { x: undefined, y: undefined };
+const dpr = window.devicePixelRatio || 1;
 
-/* -- initialise ----------------------------------------------------- */
 function init() {
     canvas = document.getElementById('particleCanvas');
-    ctx    = canvas.getContext('2d');
-    canvas.width  = innerWidth;
-    canvas.height = innerHeight;
+    if (!canvas) {
+        console.error('Canvas element not found!');
+        return; // Exit if canvas not found
+    }
+    
+    ctx = canvas.getContext('2d');
+    
+    // Set height to 130% of window height to extend waves into journey section
+    const extendedHeight = window.innerHeight * 1.3;
+    
+    // set size for high-DPR devices
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = extendedHeight * dpr;
+    canvas.style.width = `${window.innerWidth}px`;
+    canvas.style.height = `${extendedHeight}px`;
+    
+    ctx.scale(dpr, dpr);
 
-    const spacing = 25, depth = 4000,
-          width = canvas.width * 3, startX = -width / 2;
+    // Clear existing arrays
+    splashes.length = 0;
+    fishes.length = 0;
+    particles.length = 0;
+
+    const spacing = 30, depth = 4000,
+          width = canvas.width * 3 / dpr, startX = -width / 2;
 
     for (let z = -1000; z < depth; z += spacing)
         for (let x = 0; x < width; x += spacing)
@@ -247,41 +208,96 @@ function init() {
     particles.sort((a, b) => b.baseZ - a.baseZ);
 }
 
-/* --------------- MAIN LOOP --------------- */
 function animate() {
+    if (!canvas || !ctx) {
+        console.error('Canvas or context not initialized');
+        requestAnimationFrame(animate);
+        return;
+    }
+    
     ctx.fillStyle = 'rgba(0,0,0,0.25)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
     time++;
+    
+    // Update and draw particles
+    particles.forEach(p => {
+        p.update(time, ROT_X, ROT_Y);
+        p.draw(ctx);
+    });
 
-    particles.forEach(p => { p.update(time, ROT_X, ROT_Y); p.draw(ctx); });
+    // Add fish
+    if (Math.random() < 0.006) fishes.push(new Fish(Math.random() < 0.5 ? 1 : -1));
 
-    if (Math.random() < 0.009) fishes.push(new Fish(Math.random() < 0.5 ? 1 : -1));
-    if (Math.random() < 0.001) comets.push(new Comet());
-
+    // Update and draw fish
     for (let i = fishes.length - 1; i >= 0; i--)
         if (!fishes[i].update()) {
             splashes.push(new Splash(fishes[i].endX, fishes[i].y0, 40 * fishes[i].scale));
             fishes.splice(i, 1);
         } else fishes[i].draw(ctx);
 
-    for (let i = comets.length - 1; i >= 0; i--)
-        if (!comets[i].update()) comets.splice(i, 1); else comets[i].draw(ctx);
-
+    // Update splashes
     for (let i = splashes.length - 1; i >= 0; i--)
         if (!splashes[i].update()) splashes.splice(i, 1);
 
     requestAnimationFrame(animate);
 }
 
-/* --------------- EVENTS --------------- */
 window.addEventListener('resize', () => {
-    canvas.width = innerWidth; canvas.height = innerHeight;
-    particles.length = fishes.length = comets.length = splashes.length = 0;
+    // adjust for new size and DPR
+    const extendedHeight = window.innerHeight * 1.3;
+    
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = extendedHeight * dpr;
+    canvas.style.width = `${window.innerWidth}px`;
+    canvas.style.height = `${extendedHeight}px`;
+    ctx.scale(dpr, dpr);
+
+    particles.length = fishes.length = splashes.length = 0;
     init();
 });
 
-window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-window.addEventListener('mouseleave', () => { mouse.x = mouse.y = undefined; });
+// Update mouse tracking to check if mouse is within the canvas area
+window.addEventListener('mousemove', e => {
+    // Check if canvas exists before proceeding
+    if (!canvas) return;
+    
+    // Only track the mouse if it's actually over the canvas element
+    const canvasRect = canvas.getBoundingClientRect();
+    if (
+        e.clientX >= canvasRect.left && 
+        e.clientX <= canvasRect.right &&
+        e.clientY >= canvasRect.top && 
+        e.clientY <= canvasRect.bottom
+    ) {
+        // Mouse is inside the canvas area, track its position relative to the canvas
+        // Immediately update position on mouse entry or movement
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    } else {
+        // Mouse is outside the canvas area, clear its position
+        mouse.x = undefined;
+        mouse.y = undefined;
+    }
+});
 
-/* --------------- START --------------- */
-document.addEventListener('DOMContentLoaded', () => { init(); animate(); });
+// Initialize event listeners in a separate function
+function initEventListeners() {
+    if (!canvas) return;
+    
+    // Make sure to clear mouse position when leaving the canvas specifically
+    canvas.addEventListener('mouseleave', () => { 
+        mouse.x = mouse.y = undefined; 
+    });
+    
+    // Immediately capture mouse position when entering canvas
+    canvas.addEventListener('mouseenter', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => { 
+    init(); 
+    animate();
+    initEventListeners(); 
+});
