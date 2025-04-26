@@ -96,7 +96,9 @@ class Fish {
 
         const baseDist = canvas.width * (0.12 + 0.08 * this.depth) / dpr;
         this.totalX = baseDist * (2.5 + Math.random() * 3);
-        const pxPerFr = 6 + Math.random() * 2;
+        // Slow down on mobile: reduce base speed
+        const isMobile = window.innerWidth <= 768;
+        const pxPerFr = (isMobile ? 3 : 6) + Math.random() * 2;
         this.dur = this.totalX / pxPerFr;
 
         this.apex = Math.random() < 0.5 ? 80 : 30;

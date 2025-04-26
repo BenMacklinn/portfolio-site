@@ -382,12 +382,17 @@
         }
 
         @media (max-width: 768px) {
-            .timeline-dot, .timeline-dot-glow {
-                left: 0;
-            }
-            
-            .timeline-dot-glow {
-                transform: translate(0, -50%);
+            /* Mobile adjustments */
+            #particleCanvas { height: 130vh !important; }
+            .flip-button { display: block !important; top: 1rem !important; right: 1rem !important; bottom: auto !important; left: auto !important; }
+            .hanging-sign { display: none !important; }
+            .timeline-container > div.relative { margin-bottom: 12rem !important; }
+            /* Shift My Journey title below waves */
+            #projects { padding-top: 100vh !important; }
+            /* Hide hanging sign strings on mobile */
+            .card-back .project-card::before,
+            .card-back .project-card::after {
+                display: none !important;
             }
         }
 
@@ -529,12 +534,12 @@
                 <!-- Project 2 -->
                 <div class="relative z-10 mb-32 md:mb-24">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="order-2">
+                        <div class="order-1 md:order-2">
                             <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
                                 <img src="images/Ironman.jpg" alt="Gesture Control System" class="h-full w-full object-cover">
                             </div>
                         </div>
-                        <div class="order-1">
+                        <div class="order-2 md:order-1">
                             <div class="card-container">
                                 <div class="card" id="card-2">
                                     <div class="card-face card-front">
@@ -627,7 +632,7 @@
                 <!-- Project 4 -->
                 <div class="relative z-10 mb-32 md:mb-24">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="order-2">
+                        <div class="order-1 md:order-2">
                             <div class="flex justify-center">
                                 <div class="w-[33vh] max-w-full">
                                     <div class="aspect-[9/16] overflow-hidden rounded-xl shadow-lg bg-gray-900">
@@ -639,7 +644,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="order-1">
+                        <div class="order-2 md:order-1">
                             <div class="card-container">
                                 <div class="card" id="card-4">
                                     <div class="card-face card-front">
@@ -760,9 +765,9 @@
                     
                     // Wait for fade to complete before scrolling
                     setTimeout(() => {
-                        const projectsSection = document.getElementById('projects');
-                        if (projectsSection) {
-                            projectsSection.scrollIntoView({ behavior: 'smooth' });
+                        const journeyTitle = document.querySelector('.journey-title');
+                        if (journeyTitle) {
+                            journeyTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }
                     }, 800); // Full fade time to ensure complete fade before scroll
                 });
