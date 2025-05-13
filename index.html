@@ -308,49 +308,26 @@
         #projects {
             min-height: 150vh;
             padding-top: 12rem;
-            padding-bottom: 24rem; /* Increased from 12rem to 24rem to provide more space at the bottom */
-            overflow: visible !important; /* Ensure content can extend beyond the section boundaries */
+            padding-bottom: 8rem; /* Reduced from 16rem to 8rem */
+            overflow: visible !important;
         }
 
         /* Timeline container spacing */
         .timeline-container {
             padding-top: 4rem;
             position: relative;
-            overflow: visible; /* Changed from hidden to visible to allow elements to extend beyond container */
+            overflow: visible;
         }
 
         /* Make sure the last project card can extend fully */
         .timeline-container > div.relative:last-child {
-            margin-bottom: 15rem !important; /* Explicit space after the last card to accommodate hanging sign */
+            margin-bottom: 6rem !important; /* Reduced from 10rem to 6rem */
             overflow: visible;
         }
 
-        /* Add radial gradient background behind timeline */
+        /* Remove the radial gradient background behind timeline */
         .timeline-dot-glow {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 250rem;
-            height: 250rem;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            background: radial-gradient(circle, 
-                rgba(255, 255, 255, 0.2) 0%,
-                rgba(255, 255, 255, 0.18) 3%, 
-                rgba(255, 255, 255, 0.15) 5%, 
-                rgba(255, 255, 255, 0.12) 10%, 
-                rgba(255, 255, 255, 0.1) 15%,
-                rgba(255, 255, 255, 0.07) 25%,
-                rgba(255, 255, 255, 0.05) 40%,
-                rgba(255, 255, 255, 0.03) 60%,
-                rgba(255, 255, 255, 0.02) 80%,
-                rgba(0, 0, 0, 0) 98%);
-            pointer-events: none;
-            z-index: 20; /* Increased to make sure it displays above all section backgrounds */
-            mix-blend-mode: screen;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-            filter: contrast(1.1) brightness(1.2);
+            display: none; /* Hide the large glow effect */
         }
 
         /* Adjust timeline dot */
@@ -359,13 +336,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 2rem;
-            height: 2rem;
+            width: 1.5rem;
+            height: 1.5rem;
             background: white;
             border-radius: 50%;
-            border: 4px solid black;
-            z-index: 25; /* Increased from 20 to appear above the glow */
-            box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.4);
+            border: 3px solid black;
+            z-index: 25;
+            box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.4);
+            transition: opacity 0.3s ease;
         }
 
         .timeline-dot::before {
@@ -374,8 +352,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 1.5rem;
-            height: 1.5rem;
+            width: 1rem;
+            height: 1rem;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 50%;
             opacity: 0.7;
@@ -446,12 +424,250 @@
         #card-5 .project-card::after {
             display: none !important;
         }
+
+        /* Update the blog overlay styles */
+        .blog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgb(0, 0, 0);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+            overflow-y: auto;
+        }
+
+        .blog-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .blog-overlay-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .blog-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .blog-author-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            border: 2px solid white;
+            overflow: hidden;
+        }
+
+        .blog-author-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .blog-date {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 3rem;
+        }
+
+        .blog-content-divider {
+            width: 100%;
+            height: 1px;
+            margin: 2rem 0;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.05) 15%,
+                rgba(255, 255, 255, 0.4) 50%,
+                rgba(255, 255, 255, 0.05) 85%,
+                rgba(255, 255, 255, 0) 100%
+            );
+        }
+
+        /* Make the line thicker in the middle */
+        .blog-content-divider::after {
+            content: '';
+            display: block;
+            width: 30%;
+            height: 2px;
+            margin: -1px auto 0;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+        }
+
+        .blog-section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: rgb(96, 165, 250);
+            margin: 3rem 0 1.5rem;
+            font-style: italic;
+        }
+
+        .blog-overlay p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+        }
+
+        .blog-overlay .bg-gray-800\/50 {
+            background: rgba(31, 41, 55, 0.5);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .blog-overlay ul {
+            margin-left: 1.5rem;
+        }
+
+        .blog-overlay li {
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .blog-overlay .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .blog-overlay .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        /* Add a subtle fade effect at the top and bottom */
+        .blog-overlay::before,
+        .blog-overlay::after {
+            content: '';
+            position: fixed;
+            left: 0;
+            right: 0;
+            height: 100px;
+            pointer-events: none;
+            z-index: 101;
+        }
+
+        .blog-overlay::before {
+            top: 0;
+            background: linear-gradient(to bottom, rgb(0, 0, 0) 0%, transparent 100%);
+        }
+
+        .blog-overlay::after {
+            bottom: 0;
+            background: linear-gradient(to top, rgb(0, 0, 0) 0%, transparent 100%);
+        }
+
+        @media (max-width: 768px) {
+            .blog-overlay-content {
+                padding: 6rem 1.5rem;
+            }
+
+            .blog-overlay h3 {
+                font-size: 2rem;
+            }
+
+            .blog-overlay .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Add styles for the close button */
+        .blog-close-button {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 101;
+        }
+
+        .blog-close-button:hover {
+            color: white;
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        .blog-close-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            stroke-width: 2;
+        }
+
+        /* Update insights section styles */
+        #insights {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 1s ease-in-out;
+            overflow-y: auto;
+            /* Add custom scrollbar styling */
+            scrollbar-width: thin;
+            scrollbar-color: rgba(96, 165, 250, 0.5) rgba(0, 0, 0, 0.2);
+        }
+
+        #insights::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #insights::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        #insights::-webkit-scrollbar-thumb {
+            background: rgba(96, 165, 250, 0.5);
+            border-radius: 4px;
+        }
+
+        #insights::-webkit-scrollbar-thumb:hover {
+            background: rgba(96, 165, 250, 0.7);
+        }
+
+        #insights.active {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+        }
     </style>
 </head>
 <body class="bg-black text-white">
     <!-- Hero Section -->
     <section id="hero" class="relative h-screen flex items-center justify-center overflow-visible">
-        <canvas id="particleCanvas" class="absolute top-0 left-0 w-full" style="height: 130vh; z-index: 5;"></canvas>
+        <canvas id="particleCanvas" class="absolute top-0 left-0 w-full" style="height: 130vh; z-index: 1;"></canvas>
         <div class="relative z-30 text-center px-4">
             <div class="hero-content text-center">
                 <div class="mb-6">
@@ -460,10 +676,145 @@
                     </div>
                 </div>
                 <h1 class="text-5xl md:text-6xl font-bold mb-4 text-white">Hi, I'm <span class="text-blue-400">Ben Macklin</span></h1>
-                <p class="text-xl text-gray-300 mb-8">Computer Engineering Student @ Queen's University with a Passion for Robotics</p>
+                <p class="text-xl text-gray-300 mb-8">
+                    Computer Engineering Student @ Queen's University with a Passion for 
+                    <span id="passion-text" class="text-blue-400 font-bold"></span>
+                </p>
                 <div class="flex gap-4 justify-center">
-                    <a href="#projects" class="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">View My Journey</a>
-                    <a href="#contact" class="px-6 py-3 border border-blue-600 rounded-lg hover:bg-blue-600/20 transition-colors">Contact Me</a>
+                    <a href="#projects" class="group relative px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition-all duration-300 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="relative flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            <span>View My Projects</span>
+                </div>
+                    </a>
+                    <a href="#insights" class="group relative px-6 py-3 border border-blue-600 rounded-lg hover:bg-blue-600/20 transition-all duration-300 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="relative flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                            <span>My Blog</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Business Insights Section -->
+    <section id="insights" class="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-all duration-1000 ease-in-out overflow-y-auto">
+        <div class="min-h-screen py-20 px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-16 opacity-0 translate-y-4 transition-all duration-800">
+                    <h2 class="text-4xl font-bold text-blue-400">My Blog</h2>
+                    <button id="closeInsights" class="text-gray-400 hover:text-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="grid gap-8">
+                    <!-- New Blog Post Card -->
+                    <div class="blog-card bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 hover:bg-gray-900/70 transition-all duration-300 cursor-pointer transform hover:-translate-y-1 opacity-0 translate-y-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-16 h-16 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-white mb-2">Where Robotics Is Heading: Product or Service?</h3>
+                                <p class="text-gray-400 mb-4">Exploring the fundamental shift in robotics business models, from one-time sales to subscription services, and how this affects the future of the industry.</p>
+                                <div class="flex items-center gap-4 text-sm text-gray-500">
+                                    <span>8 min read</span>
+                                    <span>•</span>
+                                    <span>Business Strategy</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Expanded Content -->
+                        <div class="blog-content mt-6 max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                            <div class="prose prose-invert max-w-none">
+                                <p class="text-gray-300 mb-4">As I've been following robotics news and working on my own projects, I noticed something interesting. There seems to be this shift happening in how robotics companies operate. It's not just about building cool robots anymore, it's about how these robots are being used as actual business solutions.</p>
+                                
+                                <p class="text-gray-300 mb-4">What caught my attention was this question: Should robots be something you buy, like a vacuum cleaner, or something you subscribe to, like Netflix? The more I looked into it, the more I realized this choice actually changes everything about how these companies work.</p>
+
+                                <h4 class="text-lg font-semibold text-blue-400 mt-6 mb-3">What The Data Shows</h4>
+                                <p class="text-gray-300 mb-4">I started digging into some market research, and found some pretty clear trends. Check this out: the service based approach to robotics is growing way faster than traditional consumer robots:</p>
+
+                                <p class="text-gray-300 mb-4">These numbers kind of blew my mind. The service robotics market is expected to hit $213 billion by 2029, huge! Meanwhile, consumer robotics (think robot vacuums)is growing too, but not nearly as fast. As someone interested in both robotics and business, this got me thinking about where the industry is heading.</p>
+
+                                <h4 class="text-lg font-semibold text-blue-400 mt-6 mb-3">Cool Companies Doing This</h4>
+                                <p class="text-gray-300 mb-4">One company that really caught my eye is Zipline. Instead of selling drones, they run an entire delivery service using their drones. They're mainly delivering medical supplies in places where it's hard to reach by road. What's cool is that their customers don't have to worry about maintaining drones or training pilots, Zipline handles everything. It's like a Uber Eats, but for medical supplies (way more important).</p>
+                                
+                                <p class="text-gray-300 mb-4">This reminds me of how Netflix changed movies. Everything is now a subscription based service. It seems like robotics might be heading in a similar direction.</p>
+
+                                <h4 class="text-lg font-semibold text-blue-400 mt-6 mb-3">Following Investment Trends</h4>
+                                <p class="text-gray-300 mb-4">I also looked into where investors are putting their money (since that's usually a good sign of what's working). The data was pretty interesting:</p>
+
+                                <p class="text-gray-300 mb-4">Even though both types of robotics companies saw a big boost in 2021, service robotics companies have been getting more consistent funding. From what I understand, investors seem to like the idea of steady, recurring revenue instead of one-time sales.</p>
+
+                                <h4 class="text-lg font-semibold text-blue-400 mt-6 mb-3">Another Cool Example: Agility Robotics</h4>
+                                <p class="text-gray-300 mb-4">Another company I thought was cool is Agility Robotics. They've built this impressive humanoid robot called Digit that can work in warehouses. But instead of just selling these robots, they're working closely with companies to integrate them into their operations. It's like having a robotics partner rather than just buying a product.</p>
+                                
+                                <p class="text-gray-300 mb-4">This makes a lot of sense to me. If I were the one running a warehouse, having help figuring out how to actually use a humanoid robot effectively would be super beneficial.</p>
+
+                                <h4 class="text-lg font-semibold text-blue-400 mt-6 mb-3">Why I Think This Matters</h4>
+                                <p class="text-gray-300 mb-4">As someone learning about robotics and hoping to work in this field, I think this shift is super important. It's changing how we need to think about building robots. It's not just about making a cool robot, it's about creating a whole service that solves real problems for people.</p>
+                                
+                                <p class="text-gray-300">This actually gets me excited about the future. Whether I end up building robots or working on the business side of robotics, understanding this trend feels like getting a peek at where the industry is heading. It's also pretty cool to see how robotics is becoming more about ongoing relationships with customers rather than just selling products.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Second Blog Post -->
+                    <div class="blog-card bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 hover:bg-gray-900/70 transition-all duration-300 cursor-pointer transform hover:-translate-y-1 opacity-0 translate-y-4 mt-8">
+                        <div class="flex items-start gap-4">
+                            <div class="w-16 h-16 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-white mb-2">Why I Started Building Outside of Class</h3>
+                                <p class="text-gray-400 mb-4">A personal reflection on the journey from textbook problems to real-world projects, and why hands-on building became essential to my learning.</p>
+                                <div class="flex items-center gap-4 text-sm text-gray-500">
+                                    <span>6 min read</span>
+                                    <span>•</span>
+                                    <span>Personal Growth</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="blog-content mt-6 max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                            <div class="prose prose-invert max-w-none">
+                                <p class="text-gray-300 mb-4">I hit a point in school where I realized just doing the assignments wasn't enough. Not because the work was easy, but because it didn't feel like it added up to anything real. I could solve textbook problems, follow lab instructions, and pass exams. But I couldn't point to something and say, "I built this."</p>
+                                
+                                <p class="text-gray-300 mb-4">That started bothering me.</p>
+
+                                <p class="text-gray-300 mb-4">Funnily enough, the first time I set out to do something about it was because of a real-life problem. My roommates never cleaned their dishes, and worse than that, no one took responsibility for the mess. I deided it could be funny and cool to finally put an end to this issue. So I decided to try something different. I grabbed a camera, started playing around with motion detection, and tried to build a system that could figure out who left dishes in the kitchen. No guide, no instructions, just a problem I was tired of dealing with. Once completed, I felt a sense of accomplishment and pride.</p>
+
+                                <p class="text-gray-300 mb-4">That was the first time I saw what it felt like to use what I was learning to solve something that mattered to me.</p>
+
+                                <h4 class="text-lg font-semibold text-blue-400 mt-6 mb-3">Why I Needed More Than Coursework</h4>
+                                <p class="text-gray-300 mb-4">Courses teach important stuff. But the structure of school means you rarely go past what you're told to do. You're learning in pieces, and there's not much time to step back and try putting those pieces together into something that actually works in the real world.</p>
+
+                                <p class="text-gray-300 mb-4">I wanted to build something that forced me to connect the dots with concepts I learned. Something that would break if I misunderstood a voltage rating, or missed a step in the code. Projects do that. They test whether you really get it, or if you just know how to pass the quiz.</p>
+
+                                <h4 class="text-lg font-semibold text-blue-400 mt-6 mb-3">Why I Actually Enjoy It</h4>
+                                <p class="text-gray-300 mb-4">It turns out, it's fun to be stuck. When you're troubleshooting a bug or trying to figure out why your servo isn't moving the way you expected, you're learning. There's frustration, but there's also satisfaction when you solve it. That kind of trial and error sticks with you way more than a lecture ever could.</p>
+
+                                <p class="text-gray-300 mb-4">I also realized that building stuff just makes school more interesting. Suddenly a class on electronics doesn't feel abstract when you're brainstorming how your going to power your own robotic hand. You care more because you're using the material to make something work.</p>
+
+                                <h4 class="text-lg font-semibold text-blue-400 mt-6 mb-3">It Builds Real Skills</h4>
+                                <p class="text-gray-300 mb-4">More than anything, doing your own projects makes you more capable. You get used to failing without panicking. You learn how to take a vague idea and make it real.</p>
+
+                                <p class="text-gray-300">There's something different about finishing something you made from scratch. It gives you confidence. It makes you curious to try something harder next time. And it makes you feel like the material in school can be more than a chore.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -731,265 +1082,334 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="relative z-10 py-20 px-4 bg-black/90">
-        <div class="max-w-2xl mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-8">Get in Touch</h2>
-            <p class="text-gray-300 mb-8">Feel free to reach out for collaborations or just a friendly hello</p>
-            <div class="flex gap-4 justify-center">
-                <a href="mailto:benvmacklin@gmail.com" class="text-blue-400 hover:text-blue-300">Email</a>
-                <a href="https://www.linkedin.com/in/ben-macklin-927576297/" class="text-blue-400 hover:text-blue-300">LinkedIn</a>
-            </div>
-        </div>
+    <!-- Return to Top Button -->
+    <section id="return-to-top" class="fixed bottom-8 right-8 z-50 transform transition-all duration-500 ease-in-out opacity-0 translate-y-4">
+        <button class="bg-gray-900/95 backdrop-blur-sm rounded-full p-4 shadow-2xl border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400 group-hover:-translate-y-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            </svg>
+        </button>
     </section>
 
+    <!-- Contact Button and Card -->
+    <div id="contactButton" class="fixed top-8 right-8 z-50 transform transition-all duration-300 ease-in-out">
+        <button class="bg-gray-900/95 backdrop-blur-sm rounded-full p-4 shadow-2xl border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 group relative">
+            <div class="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+        </button>
+            </div>
+
+    <div id="contactCard" class="fixed top-8 right-8 z-50 transform transition-all duration-300 ease-in-out opacity-0 pointer-events-none scale-95">
+        <div class="bg-gray-900/95 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-blue-500/20 w-80">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-blue-400">Get in Touch</h2>
+                <button id="closeContact" class="text-gray-400 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+        </div>
+            <div class="space-y-6">
+                <a href="mailto:benvmacklin@gmail.com" class="flex items-center gap-4 p-4 bg-gray-800/50 rounded-xl hover:bg-gray-800/70 transition-colors cursor-pointer">
+                    <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">Email</h3>
+                        <span class="text-gray-400 group-hover:text-blue-400 transition-colors">benvmacklin@gmail.com</span>
+                    </div>
+                </a>
+                <a href="https://www.linkedin.com/in/ben-macklin-927576297/" target="_blank" class="flex items-center gap-4 p-4 bg-gray-800/50 rounded-xl hover:bg-gray-800/70 transition-colors cursor-pointer">
+                    <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">LinkedIn</h3>
+                        <span class="text-gray-400 group-hover:text-blue-400 transition-colors">Connect with me</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this right before the closing body tag -->
+    <div id="blogOverlay" class="blog-overlay">
+        <button class="blog-close-button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <div class="blog-overlay-content">
+            <!-- Content will be dynamically inserted here -->
+        </div>
+    </div>
+
     <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Now we'll target the project cards instead of just the flip buttons
-            const projectCards = document.querySelectorAll('.project-card');
-            const cards = document.querySelectorAll('.card');
-            let activeTimeout;
-            let scrollToTopTimeout;
+            // Projects Button Smooth Scroll
+            const projectsButton = document.querySelector('a[href="#projects"]');
+            projectsButton.addEventListener('click', (e) => {
+                e.preventDefault();
             
-            // Handle journey button click and smooth scroll
-            const journeyButton = document.querySelector('a[href="#projects"]');
+                // Fade out hero content
             const heroContent = document.querySelector('.hero-content');
-            
-            if (journeyButton && heroContent) {
-                journeyButton.addEventListener('click', function(e) {
-                    e.preventDefault();
+                heroContent.style.opacity = '0';
+                
+                setTimeout(() => {
+                    // Smooth scroll to projects section
+                    document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
                     
-                    // Fade out the hero content
-                    heroContent.classList.add('faded');
-                    
-                    // Wait for fade to complete before scrolling
+                    // Fade hero content back in after scrolling
                     setTimeout(() => {
-                        const journeyTitle = document.querySelector('.journey-title');
-                        if (journeyTitle) {
-                            journeyTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                    }, 800); // Full fade time to ensure complete fade before scroll
-                });
-            }
-            
-            // Fade in hero content when scrolling back to top with delay
-            window.addEventListener('scroll', () => {
-                // Clear any pending timeouts
-                clearTimeout(scrollToTopTimeout);
-                
-                if (window.scrollY < 100) {
-                    // Near the top of the page - wait before fading back in
-                    scrollToTopTimeout = setTimeout(() => {
-                        heroContent.classList.remove('faded');
-                    }, 200); // Reduced from 1000ms to 500ms for quicker fade-in
-                } else if (window.scrollY > window.innerHeight / 2) {
-                    // Scrolled past half the screen height
-                    heroContent.classList.add('faded');
-                }
+                        heroContent.style.opacity = '1';
+                    }, 1000);
+                }, 800);
             });
-            
-            // Fix spacing when a card is flipped
-            function updateSpacing(timelineItem, isFlipped) {
-                if (!timelineItem) return;
-                
-                if (isFlipped) {
-                    const card = timelineItem.querySelector('.card');
-                    const hangingSign = card.querySelector('.hanging-sign');
-                    const nextItem = timelineItem.nextElementSibling;
+
+            // Typing animation for passion text
+            const passionText = document.getElementById('passion-text');
+            const words = ["Robotics", "Technology", "Entrepreneurship", "Artificial Intelligence"];
+            let currentWordIndex = 0;
+            let currentText = "";
+            let isDeleting = false;
+            let typingSpeed = 100;
+            let deletingSpeed = 50;
+            let pauseTime = 2000;
+            let currentIndex = 0;
+            let isPaused = false;
+
+            function typeText() {
+                if (!isPaused) {
+                    const currentWord = words[currentWordIndex];
                     
-                    if (hangingSign && nextItem) {
-                        // Ensure DOM is updated
-                        void timelineItem.offsetHeight;
-                        
-                        // Get the exact positions
-                        const signRect = hangingSign.getBoundingClientRect();
-                        const nextCardRect = nextItem.querySelector('.card').getBoundingClientRect();
-                        
-                        // Log exact positions
-                        console.log('Sign bottom position:', signRect.bottom);
-                        console.log('Next card top position:', nextCardRect.top);
-                        console.log('Current gap:', nextCardRect.top - signRect.bottom);
-                        
-                        // If there's an overlap or insufficient gap
-                        const currentGap = nextCardRect.top - signRect.bottom;
-                        const minGap = 20; // Minimum gap in pixels
-                        
-                        if (currentGap < minGap) {
-                            // How much additional space we need
-                            const additionalSpace = minGap - currentGap;
-                            
-                            // Get current margin in pixels
-                            const currentMargin = parseInt(window.getComputedStyle(timelineItem).marginBottom);
-                            console.log('Current margin:', currentMargin);
-                            
-                            // New margin = current + additional space needed
-                            const newMargin = (currentMargin + additionalSpace) / 16;
-                            console.log('Setting new margin:', newMargin + 'rem', '(Adding ' + additionalSpace + 'px)');
-                            
-                            // Apply the spacing
-                            timelineItem.style.setProperty('--dynamic-space', newMargin + 'rem');
-                            timelineItem.classList.add('needs-space');
-                        } else {
-                            console.log('Gap is sufficient:', currentGap, 'pixels. No adjustment needed.');
-                            timelineItem.classList.remove('needs-space');
-                            timelineItem.style.removeProperty('--dynamic-space');
+                    if (!isDeleting) {
+                        currentText = currentWord.substring(0, currentIndex + 1);
+                        currentIndex++;
+                        typingSpeed = 100 + Math.random() * 50;
+
+                        if (currentIndex === currentWord.length) {
+                            isPaused = true;
+                            setTimeout(() => {
+                                isPaused = false;
+                                isDeleting = true;
+                            }, pauseTime);
                         }
+                        } else {
+                        currentText = currentWord.substring(0, currentIndex - 1);
+                        currentIndex--;
+                        deletingSpeed = 50 + Math.random() * 30;
+
+                        if (currentIndex === 0) {
+                            isDeleting = false;
+                            isPaused = true;
+                            currentWordIndex = (currentWordIndex + 1) % words.length;
+                            setTimeout(() => {
+                                isPaused = false;
+                            }, 500);
                     }
-                } else {
-                    timelineItem.classList.remove('needs-space');
-                    timelineItem.style.removeProperty('--dynamic-space');
+                    }
+
+                    passionText.textContent = currentText;
                 }
+
+                setTimeout(typeText, isDeleting ? deletingSpeed : typingSpeed);
             }
             
-            // Add click event listeners to project cards instead of buttons
-            projectCards.forEach((card) => {
-                card.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    // Find the parent .card element that needs to be flipped
-                    const parentCard = card.closest('.card');
-                    const timelineItem = parentCard.closest('.relative');
-                    
-                    // Toggle flipped state
-                    const willBeFlipped = !parentCard.classList.contains('flipped');
-                    parentCard.classList.toggle('flipped');
-                    
-                    // Clear any pending timeouts
-                    clearTimeout(activeTimeout);
-                    
-                    // Update spacing after animation completes
-                    activeTimeout = setTimeout(() => {
-                        console.log('Checking spacing after flip...');
-                        updateSpacing(timelineItem, willBeFlipped);
+            // Start the typing animation
+            setTimeout(typeText, 1000);
+
+            // Contact Button Functionality
+            const contactButton = document.getElementById('contactButton');
+            const contactCard = document.getElementById('contactCard');
+            const closeContact = document.getElementById('closeContact');
+
+            contactButton.addEventListener('click', () => {
+                contactButton.style.opacity = '0';
+                contactButton.style.pointerEvents = 'none';
+                contactCard.style.opacity = '1';
+                contactCard.style.pointerEvents = 'auto';
+                contactCard.style.transform = 'scale(1)';
+            });
+
+            closeContact.addEventListener('click', () => {
+                contactCard.style.opacity = '0';
+                contactCard.style.pointerEvents = 'none';
+                contactCard.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    contactButton.style.opacity = '1';
+                    contactButton.style.pointerEvents = 'auto';
                     }, 300);
                 });
-            });
 
-            // Update on resize
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    console.log('Checking spacing after resize...');
-                    document.querySelectorAll('.timeline-container > div.relative').forEach(item => {
-                        const card = item.querySelector('.card');
-                        if (card && card.classList.contains('flipped')) {
-                            updateSpacing(item, true);
-                        }
-                    });
-                }, 100);
-            });
+            // Business Insights Section Transition
+            const insightsButton = document.querySelector('a[href="#insights"]');
+            const insightsSection = document.getElementById('insights');
+            const closeInsightsButton = document.getElementById('closeInsights');
+            const blogCards = document.querySelectorAll('.blog-card');
+            const insightsHeader = insightsSection.querySelector('.flex.justify-between');
 
-            // Create glows for all timeline dots
-            const timelineItems = document.querySelectorAll('.timeline-container > div.relative');
+            function showInsights() {
+                // First fade out hero content
+                const heroContent = document.querySelector('.hero-content');
+                heroContent.style.transition = 'opacity 800ms ease-out';
+                heroContent.style.opacity = '0';
+                
+                // Get the wave canvas and add transition
+                const waveCanvas = document.getElementById('particleCanvas');
+                waveCanvas.style.transition = 'transform 1000ms ease-in-out';
+                
+                // Wait for fade out to complete before sliding in insights
+                setTimeout(() => {
+                    // Slide waves to the left
+                    waveCanvas.style.transform = 'translateY(100%)';
             
-            timelineItems.forEach(item => {
-                const existingDot = item.querySelector('.timeline-dot');
-                if (existingDot) {
-                    // Create glow element if it doesn't already exist
-                    if (!item.querySelector('.timeline-dot-glow')) {
-                        const glow = document.createElement('div');
-                        glow.className = 'timeline-dot-glow';
-                        document.body.appendChild(glow); // Append to body instead of the item
-                        console.log('Added glow to dot', existingDot);
-                    }
-                }
+                    // Show insights section with visibility and opacity
+                    insightsSection.style.visibility = 'visible';
+                    insightsSection.style.pointerEvents = 'auto';
+                    insightsSection.style.opacity = '1';
+                    insightsSection.style.transform = 'translateY(0)';
+                    
+                    // Hide scrollbar on main content
+                    document.documentElement.style.overflow = 'hidden';
+                    document.body.style.overflow = 'hidden';
+
+                    // Wait for waves to complete their transition before showing content
+                    setTimeout(() => {
+                        // Show header with fade and slide up
+                        const header = insightsSection.querySelector('.flex.justify-between');
+                        header.style.opacity = '1';
+                        header.style.transform = 'translateY(0)';
+            
+                        // Show blog cards in sequence with shorter delays
+                        blogCards.forEach((card, index) => {
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'translateY(0)';
+                            }, 400 + (index * 200));
             });
-            
-            // Fix for the last timeline dot if needed
-            const lastItem = timelineItems[timelineItems.length - 1];
-            if (lastItem && lastItem.querySelector('.timeline-dot') && !lastItem.querySelector('.timeline-dot-glow')) {
-                const glow = document.createElement('div');
-                glow.className = 'timeline-dot-glow';
-                document.body.appendChild(glow); // Append to body
-                console.log('Fixed last dot glow');
+                    }, 900);
+                }, 800);
             }
 
-            // Update glow positions and opacities based on scroll position
-            const timelineDots = document.querySelectorAll('.timeline-dot');
-            const glows = document.querySelectorAll('.timeline-dot-glow');
-            
-            // Make sure all dots and glows start with opacity 0
-            timelineDots.forEach(dot => {
-                dot.style.opacity = "0";
-            });
-            
-            glows.forEach(glow => {
-                glow.style.opacity = "0";
-            });
-            
-            // Calculate if an element is in viewport and by how much
-            function getVisibilityPercent(element) {
-                const rect = element.getBoundingClientRect();
-                const windowHeight = window.innerHeight;
-                
-                // Make the viewport zone tighter - only middle 30% of screen is fully lit
-                const viewZone = windowHeight * 0.3; // 30% of screen height
-                const viewZoneStart = windowHeight * 0.35; // Start at 35% down the screen
-                const viewZoneEnd = viewZoneStart + viewZone;
-                
-                // Element center position
-                const elementCenter = rect.top + (rect.height / 2);
-                
-                // Element is completely outside the viewing zone (strictly enforced)
-                if (elementCenter < viewZoneStart - (viewZone * 0.3) || 
-                    elementCenter > viewZoneEnd + (viewZone * 0.3)) {
-                    return 0; // Completely off
-                }
-                
-                // Element is in the center of the viewing zone
-                if (elementCenter >= viewZoneStart && elementCenter <= viewZoneEnd) {
-                    return 1; // Fully on
-                }
-                
-                // Element is in the transition zone above the viewing zone
-                if (elementCenter < viewZoneStart) {
-                    const distance = viewZoneStart - elementCenter;
-                    const transitionZone = viewZone * 0.3; // Shorter transition zone
-                    return Math.max(0, 1 - (distance / transitionZone));
-                }
-                
-                // Element is in the transition zone below the viewing zone
-                const distance = elementCenter - viewZoneEnd;
-                const transitionZone = viewZone * 0.3; // Shorter transition zone
-                return Math.max(0, 1 - (distance / transitionZone));
-            }
-            
-            // Update positions and opacities
-            function updateGlows() {
-                timelineDots.forEach((dot, index) => {
-                    if (glows[index]) {
-                        const rect = dot.getBoundingClientRect();
-                        const glow = glows[index];
-                        
-                        // Position glow at dot's position
-                        glow.style.top = (rect.top + rect.height/2) + 'px';
-                        glow.style.left = (rect.left + rect.width/2) + 'px';
-                        
-                        // Calculate the visibility percentage of the dot's parent timeline item
-                        const timelineItem = dot.closest('.relative');
-                        const visibilityPercent = getVisibilityPercent(timelineItem);
-                        
-                        // Enhance contrast with more dramatic falloff
-                        // Steeper power curve means faster falloff
-                        const enhancedOpacity = Math.pow(visibilityPercent, 1.5); // Reduced power for more visibility
-                        
-                        // Set opacity with less strict cutoff
-                        glow.style.opacity = enhancedOpacity < 0.02 ? "0" : enhancedOpacity.toFixed(2);
-                        
-                        // Also adjust dot opacity with similar less strict cutoff
-                        const dotOpacity = Math.min(1, visibilityPercent * 1.5); // Increased multiplier
-                        dot.style.opacity = dotOpacity < 0.02 ? "0" : dotOpacity.toFixed(2);
-                    }
+            function hideInsights() {
+                // First fade out blog cards in reverse sequence
+                blogCards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(1rem)';
+                    }, (blogCards.length - 1 - index) * 200);
                 });
+                
+                // Fade out header after cards
+                setTimeout(() => {
+                    const header = insightsSection.querySelector('.flex.justify-between');
+                    header.style.opacity = '0';
+                    header.style.transform = 'translateY(1rem)';
+                }, blogCards.length * 200);
+
+                // Wait for all cards to fade out before sliding out
+                setTimeout(() => {
+                    // Slide out insights section
+                    insightsSection.style.transform = 'translateY(-100%)';
+                    insightsSection.style.opacity = '0';
+                    insightsSection.style.pointerEvents = 'none';
+                
+                    // Slide waves back to center
+                    const waveCanvas = document.getElementById('particleCanvas');
+                    waveCanvas.style.transform = 'translateY(0)';
+                    
+                    // Show scrollbar on main content
+                    document.documentElement.style.overflow = '';
+                    document.body.style.overflow = '';
+                    
+                    // Wait for waves to complete their transition before showing hero content
+                    setTimeout(() => {
+                        const heroContent = document.querySelector('.hero-content');
+                        heroContent.style.transition = 'opacity 800ms ease-in';
+                        heroContent.style.opacity = '1';
+                    }, 1000);
+                    
+                    // Hide insights section after slide out
+                    setTimeout(() => {
+                        insightsSection.style.visibility = 'hidden';
+                    }, 1000);
+                }, (blogCards.length * 200) + 400);
             }
+
+            insightsButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                showInsights();
+            });
+
+            closeInsightsButton.addEventListener('click', () => {
+                hideInsights();
+            });
+
+            // Close insights when clicking outside the content area
+            insightsSection.addEventListener('click', (e) => {
+                if (e.target === insightsSection) {
+                    hideInsights();
+                }
+            });
+
+            // Blog Card Expansion Logic
+            const blogOverlay = document.getElementById('blogOverlay');
+            const blogOverlayContent = blogOverlay.querySelector('.blog-overlay-content');
+            const closeButton = blogOverlay.querySelector('.blog-close-button');
             
-            // Update more frequently for smoother transitions
-            window.addEventListener('scroll', updateGlows);
-            window.addEventListener('resize', updateGlows);
+            blogCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const title = card.querySelector('h3').textContent;
+                    const content = card.querySelector('.blog-content').innerHTML;
+                    const date = new Date().toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    
+                    blogOverlayContent.innerHTML = `
+                        <div class="blog-header">
+                            <div class="blog-author-image">
+                                <img src="images/Profile.jpg" alt="Ben Macklin">
+                            </div>
+                            <h1 class="blog-title">${title}</h1>
+                            <div class="blog-date">${date}</div>
+                        </div>
+                        <div class="blog-content-divider"></div>
+                        ${content}
+                    `;
+                    blogOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            function closeBlogOverlay() {
+                blogOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            closeButton.addEventListener('click', closeBlogOverlay);
+            blogOverlay.addEventListener('click', (e) => {
+                if (e.target === blogOverlay) {
+                    closeBlogOverlay();
+                }
+            });
             
-            // Ensure initial state is correct after a brief delay
-            setTimeout(updateGlows, 100);
+            // Close on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && blogOverlay.classList.contains('active')) {
+                    closeBlogOverlay();
+                }
+            });
         });
     </script>
 </body>

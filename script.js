@@ -5,7 +5,7 @@
    ── responsive: scales correctly on devices with different DPRs
    ========================================================= */
 
-   class Particle {
+class Particle {
     constructor(x, z) {
         this.baseX = x;
         this.baseZ = z;
@@ -19,15 +19,15 @@
         this.vy += (dy / d) * f;
     }
     update(t, rX, rY) {
-        /* wave form */
-        const baseF = 0.015, tS = 0.03;
+        /* wave form - reduced time scale for smoother movement */
+        const baseF = 0.015, tS = 0.02; // Reduced tS from 0.03 to 0.02
         let waveY = Math.sin(this.baseZ * baseF + t * tS) * 22 +
                     Math.sin(this.baseX * baseF + t * tS * 1.2) * 14;
 
-        /* spring decay from splashes */
+        /* spring decay from splashes - increased damping for smoother movement */
         this.ox += this.vx; this.oy += this.vy;
-        this.vx = (this.vx - this.ox * 0.05) * 0.9;
-        this.vy = (this.vy - this.oy * 0.05) * 0.9;
+        this.vx = (this.vx - this.ox * 0.08) * 0.85; // Increased damping from 0.05 to 0.08, reduced multiplier from 0.9 to 0.85
+        this.vy = (this.vy - this.oy * 0.08) * 0.85;
 
         /* rotate + perspective */
         let rx = this.baseX + this.ox,
@@ -84,110 +84,25 @@
     }
 }
 
-class Fish {
-    constructor(dir) {
-        this.dir = dir; this.start = time;
-        this.depth = 0.2 + Math.random() * 0.8;
-        const sky = canvas.height * 0.15 / dpr,
-              mid = canvas.height * 0.45 / dpr,
-              high = Math.random() < 0.5;
-        this.y0 = high ? sky + this.depth * 120
-                       : mid + (this.depth - 0.5) * 160;
-
-        const baseDist = canvas.width * (0.12 + 0.08 * this.depth) / dpr;
-        this.totalX = baseDist * (2.5 + Math.random() * 3);
-        // Slow down on mobile: reduce base speed
-        const isMobile = window.innerWidth <= 768;
-        const pxPerFr = (isMobile ? 3 : 6) + Math.random() * 2;
-        this.dur = this.totalX / pxPerFr;
-
-        this.apex = Math.random() < 0.5 ? 80 : 30;
-        this.scale = Math.min(1.3, Math.max(0.3, this.y0 / (canvas.height * 0.5 / dpr)));
-
-        this.x0   = dir === 1 ? -30 : canvas.width / dpr + 30;
-        this.endX = this.x0 + this.dir * this.totalX;
-
-        this.trail = Array(8).fill(null); this.tp = 0;
-    }
-    update() {
-        const t = time - this.start;
-        if (t > this.dur) return false;
-        const p = t / this.dur;
-        this.x = this.x0 + this.dir * this.totalX * p;
-        this.y = this.y0 - Math.sin(Math.PI * p) * this.apex;
-
-        const slot = this.tp & 7;
-        this.trail[slot] ||= { x: 0, y: 0 };
-        this.trail[slot].x = this.x;
-        this.trail[slot].y = this.y;
-        this.tp++;
-        return true;
-    }
-    draw(ctx) {
-        for (let i = 0; i < 8; i++) {
-            const idx = (this.tp - i - 1 + 64) & 7,
-                  pt  = this.trail[idx];
-            if (!pt) continue;
-            const a = (8 - i) / 8;
-            ctx.globalAlpha = a * 0.6;
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.arc(pt.x, pt.y, 2 * this.scale, 0, 2 * Math.PI);
-            ctx.fill();
-        }
-        ctx.globalAlpha = 1;
-
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.scale(this.scale, this.scale);
-        if (this.dir === -1) ctx.rotate(Math.PI);
-        ctx.fillStyle = '#60a5fa';
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(-12, 6);
-        ctx.lineTo(-12, -6);
-        ctx.closePath();
-        ctx.fill();
-        ctx.lineWidth = 0.7 / this.scale;
-        ctx.strokeStyle = 'rgba(255,255,255,0.8)';
-        ctx.stroke();
-        ctx.restore();
-    }
-}
-
-class Splash {
-    constructor(x, y, maxR = 200) { this.x = x; this.y = y; this.r = 6; this.maxR = maxR; }
-    update() {
-        this.r += 5;
-        particles.forEach(p => {
-            const dx = p.screenX - this.x, dy = p.screenY - this.y, d = Math.hypot(dx, dy);
-            if (d && d < this.r) p.impulse(dx, dy, (1 - d / this.r) * 4);
-        });
-        return this.r < this.maxR;
-    }
-    draw() {}
-}
-
 // Variables for the main wave/fish animation
 let canvas, ctx; const particles = [], fishes = [], splashes = [];
 let time = 0;
 const ROT_X = 0.5, ROT_Y = 0.0;
 const mouse = { x: undefined, y: undefined };
-const dpr = window.devicePixelRatio || 1;
+const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap DPR at 2 for better performance
 
 function init() {
     canvas = document.getElementById('particleCanvas');
     if (!canvas) {
         console.error('Canvas element not found!');
-        return; // Exit if canvas not found
+        return;
     }
     
-    ctx = canvas.getContext('2d');
+    ctx = canvas.getContext('2d', { alpha: false }); // Disable alpha for better performance
     
     // Set height to 130% of window height to extend waves into journey section
     const extendedHeight = window.innerHeight * 1.3;
     
-    // set size for high-DPR devices
     canvas.width = window.innerWidth * dpr;
     canvas.height = extendedHeight * dpr;
     canvas.style.width = `${window.innerWidth}px`;
@@ -200,7 +115,9 @@ function init() {
     fishes.length = 0;
     particles.length = 0;
 
-    const spacing = 30, depth = 4000,
+    // Increase particle spacing for better performance
+    const spacing = 35, // Increased from 30 to 35
+          depth = 4000,
           width = canvas.width * 3 / dpr, startX = -width / 2;
 
     for (let z = -1000; z < depth; z += spacing)
@@ -217,7 +134,8 @@ function animate() {
         return;
     }
     
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    // Use a darker background for better contrast and less ghosting
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
     ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
     time++;
     
@@ -227,60 +145,8 @@ function animate() {
         p.draw(ctx);
     });
 
-    // Add fish
-    if (Math.random() < 0.006) fishes.push(new Fish(Math.random() < 0.5 ? 1 : -1));
-
-    // Update and draw fish
-    for (let i = fishes.length - 1; i >= 0; i--)
-        if (!fishes[i].update()) {
-            splashes.push(new Splash(fishes[i].endX, fishes[i].y0, 40 * fishes[i].scale));
-            fishes.splice(i, 1);
-        } else fishes[i].draw(ctx);
-
-    // Update splashes
-    for (let i = splashes.length - 1; i >= 0; i--)
-        if (!splashes[i].update()) splashes.splice(i, 1);
-
     requestAnimationFrame(animate);
 }
-
-window.addEventListener('resize', () => {
-    // adjust for new size and DPR
-    const extendedHeight = window.innerHeight * 1.3;
-    
-    canvas.width = window.innerWidth * dpr;
-    canvas.height = extendedHeight * dpr;
-    canvas.style.width = `${window.innerWidth}px`;
-    canvas.style.height = `${extendedHeight}px`;
-    ctx.scale(dpr, dpr);
-
-    particles.length = fishes.length = splashes.length = 0;
-    init();
-});
-
-// Update mouse tracking to check if mouse is within the canvas area
-window.addEventListener('mousemove', e => {
-    // Check if canvas exists before proceeding
-    if (!canvas) return;
-    
-    // Only track the mouse if it's actually over the canvas element
-    const canvasRect = canvas.getBoundingClientRect();
-    if (
-        e.clientX >= canvasRect.left && 
-        e.clientX <= canvasRect.right &&
-        e.clientY >= canvasRect.top && 
-        e.clientY <= canvasRect.bottom
-    ) {
-        // Mouse is inside the canvas area, track its position relative to the canvas
-        // Immediately update position on mouse entry or movement
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-    } else {
-        // Mouse is outside the canvas area, clear its position
-        mouse.x = undefined;
-        mouse.y = undefined;
-    }
-});
 
 // Initialize event listeners in a separate function
 function initEventListeners() {
@@ -296,10 +162,188 @@ function initEventListeners() {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
     });
+
+    // Update mouse tracking to check if mouse is within the canvas area
+    window.addEventListener('mousemove', e => {
+        // Check if canvas exists before proceeding
+        if (!canvas) return;
+        
+        // Only track the mouse if it's actually over the canvas element
+        const canvasRect = canvas.getBoundingClientRect();
+        if (
+            e.clientX >= canvasRect.left && 
+            e.clientX <= canvasRect.right &&
+            e.clientY >= canvasRect.top && 
+            e.clientY <= canvasRect.bottom
+        ) {
+            // Mouse is inside the canvas area, track its position relative to the canvas
+            // Immediately update position on mouse entry or movement
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        } else {
+            // Mouse is outside the canvas area, clear its position
+            mouse.x = undefined;
+            mouse.y = undefined;
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        // adjust for new size and DPR
+        const extendedHeight = window.innerHeight * 1.3;
+        
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = extendedHeight * dpr;
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${extendedHeight}px`;
+        ctx.scale(dpr, dpr);
+
+        particles.length = fishes.length = splashes.length = 0;
+        init();
+    });
 }
 
-document.addEventListener('DOMContentLoaded', () => { 
-    init(); 
+// Wait for DOM to be fully loaded before initializing
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing waves...');
+    
+    // Initialize immediately
+    init();
     animate();
-    initEventListeners(); 
+    initEventListeners();
+    
+    // Also try again after a short delay to ensure canvas is ready
+    setTimeout(() => {
+        console.log('Retrying wave initialization...');
+        init();
+        animate();
+        initEventListeners();
+    }, 100);
+});
+
+// Business Insights Animation Functions
+function showInsights() {
+    // First fade out hero content
+    const heroContent = document.querySelector('.hero-content');
+    heroContent.style.transition = 'opacity 800ms ease-out';
+    heroContent.style.opacity = '0';
+    
+    // Get the wave canvas
+    const waveCanvas = document.getElementById('particleCanvas');
+    
+    // Wait for fade out to complete before sliding in insights
+    setTimeout(() => {
+        // Slide waves down
+        waveCanvas.style.transition = 'transform 1000ms ease-in-out';
+        waveCanvas.style.transform = 'translateY(100%)';
+        
+        // Show insights section
+        const insightsSection = document.getElementById('insights');
+        insightsSection.style.visibility = 'visible';
+        insightsSection.style.pointerEvents = 'auto';
+        insightsSection.style.opacity = '1';
+        insightsSection.style.transform = 'translateY(0)';
+        
+        // Prevent scrolling on the main content
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.top = `-${window.scrollY}px`;
+
+        // Enable scrolling on the insights section
+        insightsSection.style.overflow = 'auto';
+        insightsSection.style.overflowY = 'scroll';
+
+        // Wait for waves to complete their transition before showing content
+        setTimeout(() => {
+            // Show header with fade and slide up
+            const header = insightsSection.querySelector('.flex.justify-between');
+            header.style.opacity = '1';
+            header.style.transform = 'translateY(0)';
+            
+            // Show blog cards in sequence
+            const blogCards = document.querySelectorAll('.blog-card');
+            blogCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 400 + (index * 200));
+            });
+        }, 500);
+    }, 800);
+}
+
+function hideInsights() {
+    // First fade out blog cards in reverse sequence
+    const blogCards = document.querySelectorAll('.blog-card');
+    blogCards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(1rem)';
+        }, (blogCards.length - 1 - index) * 200);
+    });
+    
+    // Fade out header after cards
+    setTimeout(() => {
+        const header = document.querySelector('#insights .flex.justify-between');
+        header.style.opacity = '0';
+        header.style.transform = 'translateY(1rem)';
+    }, blogCards.length * 200);
+
+    // Wait for all cards to fade out before sliding out
+    setTimeout(() => {
+        // Slide out insights section
+        const insightsSection = document.getElementById('insights');
+        insightsSection.style.transform = 'translateY(-100%)';
+        insightsSection.style.opacity = '0';
+        insightsSection.style.pointerEvents = 'none';
+        
+        // Slide waves back up
+        const waveCanvas = document.getElementById('particleCanvas');
+        waveCanvas.style.transform = 'translateY(0)';
+        
+        // Restore scrolling on the main content
+        const scrollY = document.body.style.top;
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        
+        // Wait for waves to complete their transition before showing hero content
+        setTimeout(() => {
+            const heroContent = document.querySelector('.hero-content');
+            heroContent.style.transition = 'opacity 800ms ease-in';
+            heroContent.style.opacity = '1';
+            
+            // Reset insights section visibility after transition
+            setTimeout(() => {
+                insightsSection.style.visibility = 'hidden';
+            }, 1000);
+        }, 1000);
+    }, (blogCards.length * 200) + 400);
+}
+
+// Add event listeners for insights section
+document.addEventListener('DOMContentLoaded', () => {
+    const insightsButton = document.querySelector('a[href="#insights"]');
+    const closeInsightsButton = document.getElementById('closeInsights');
+    const insightsSection = document.getElementById('insights');
+
+    insightsButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        showInsights();
+    });
+
+    closeInsightsButton.addEventListener('click', () => {
+        hideInsights();
+    });
+
+    // Close insights when clicking outside the content area
+    insightsSection.addEventListener('click', (e) => {
+        if (e.target === insightsSection) {
+            hideInsights();
+        }
+    });
 });
