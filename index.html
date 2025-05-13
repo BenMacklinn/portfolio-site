@@ -1370,12 +1370,13 @@
                     e.stopPropagation();
                     const title = card.querySelector('h3').textContent;
                     const content = card.querySelector('.blog-content').innerHTML;
-                    const date = new Date().toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                    });
-                    
+                    // Set specific dates based on the blog post title
+                    let date = '';
+                    if (title === "Where Robotics Is Heading: Product or Service?") {
+                        date = "April 19, 2025";
+                    } else if (title === "Why I Started Building Outside of Class") {
+                        date = "April 3, 2025";
+                    }
                     blogOverlayContent.innerHTML = `
                         <div class="blog-header">
                             <div class="blog-author-image">
@@ -1409,6 +1410,76 @@
                 if (e.key === 'Escape' && blogOverlay.classList.contains('active')) {
                     closeBlogOverlay();
                 }
+            });
+
+            // Restore robust updateSpacing logic for timeline cards
+            function updateSpacing(timelineItem, isFlipped) {
+                if (!timelineItem) return;
+                if (isFlipped) {
+                    const card = timelineItem.querySelector('.card');
+                    const hangingSign = card.querySelector('.hanging-sign');
+                    const nextItem = timelineItem.nextElementSibling;
+                    if (hangingSign && nextItem) {
+                        // Ensure DOM is updated
+                        void timelineItem.offsetHeight;
+                        // Get the exact positions
+                        const signRect = hangingSign.getBoundingClientRect();
+                        const nextCardRect = nextItem.querySelector('.card').getBoundingClientRect();
+                        // If there's an overlap or insufficient gap
+                        const currentGap = nextCardRect.top - signRect.bottom;
+                        const minGap = 20; // Minimum gap in pixels
+                        if (currentGap < minGap) {
+                            // How much additional space we need
+                            const additionalSpace = minGap - currentGap;
+                            // Get current margin in pixels
+                            const currentMargin = parseInt(window.getComputedStyle(timelineItem).marginBottom);
+                            // New margin = current + additional space needed (convert px to rem)
+                            const newMargin = (currentMargin + additionalSpace) / 16;
+                            // Apply the spacing
+                            timelineItem.style.setProperty('--dynamic-space', newMargin + 'rem');
+                            timelineItem.classList.add('needs-space');
+                        } else {
+                            timelineItem.classList.remove('needs-space');
+                            timelineItem.style.removeProperty('--dynamic-space');
+                        }
+                    }
+                } else {
+                    timelineItem.classList.remove('needs-space');
+                    timelineItem.style.removeProperty('--dynamic-space');
+                }
+            }
+
+            // Add click event listeners to project cards for flipping and spacing
+            document.querySelectorAll('.project-card').forEach((card) => {
+                card.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // Find the parent .card element that needs to be flipped
+                    const parentCard = card.closest('.card');
+                    const timelineItem = parentCard.closest('.relative');
+                    // Toggle flipped state
+                    const willBeFlipped = !parentCard.classList.contains('flipped');
+                    parentCard.classList.toggle('flipped');
+                    // Update spacing after animation completes
+                    setTimeout(() => {
+                        updateSpacing(timelineItem, willBeFlipped);
+                    }, 300);
+                });
+            });
+
+            // Update on resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    document.querySelectorAll('.timeline-container > div.relative').forEach(item => {
+                        const card = item.querySelector('.card');
+                        if (card && card.classList.contains('flipped')) {
+                            updateSpacing(item, true);
+                        } else {
+                            updateSpacing(item, false);
+                        }
+                    });
+                }, 100);
             });
         });
     </script>
