@@ -419,11 +419,6 @@
             /* Remove the animation property */
         }
 
-        /* Disable hanging strings for card-5 */
-        #card-5 .project-card::before,
-        #card-5 .project-card::after {
-            display: none !important;
-        }
 
         /* Update the blog overlay styles */
         .blog-overlay {
@@ -688,7 +683,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                             </svg>
                             <span>View My Projects</span>
-                </div>
+                        </div>
                     </a>
                     <a href="#insights" class="group relative px-6 py-3 border border-blue-600 rounded-lg hover:bg-blue-600/20 transition-all duration-300 overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -882,61 +877,13 @@
                     <div class="timeline-dot hidden md:block"></div>
                 </div>
 
-                <!-- Project 2 -->
-                <div class="relative z-10 mb-32 md:mb-24">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="order-1 md:order-2">
-                            <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
-                                <img src="images/Ironman.jpg" alt="Gesture Control System" class="h-full w-full object-cover">
-                            </div>
-                        </div>
-                        <div class="order-2 md:order-1">
-                            <div class="card-container">
-                                <div class="card" id="card-2">
-                                    <div class="card-face card-front">
-                                        <div class="bg-gray-900 p-6 rounded-xl shadow-lg project-card">
-                                            <button class="flip-button flip-button-right">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                                </svg>
-                                            </button>
-                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">Gesture-Controlled Media System</h3>
-                                            <p class="mt-2 text-gray-300">Inspired by Tony Stark's holographic interfaces, I pushed my computer vision skills further by creating a gesture-based control system. Using just hand movements, I could now control my computer's volume, play/pause media, and skip through playlists. This project transformed how I interacted with my computer, making me feel one step closer to that sci-fi future I'd always dreamed of.</p>
-                                        </div>
-                                    </div>
-                                    <div class="card-face card-back">
-                                        <div class="bg-gray-900 rounded-xl shadow-lg project-card">
-                                            <button class="flip-button flip-button-right">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                                </svg>
-                                            </button>
-                                            <h3>Tech Stack</h3>
-                                            <p class="tech-details">
-                                                Built on MediaPipe's hand tracking model for precise gesture recognition. Implemented custom gesture patterns using vector mathematics and angle calculations between finger joints. System volume and media playback were controlled via native OS commands with a ~50ms response time.
-                                            </p>
-                                            <div class="hanging-sign">
-                                                <ul class="tech-stack-list">
-                                                    <li>Python</li>
-                                                    <li>MediaPipe</li>
-                                                    <li>OpenCV</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-dot hidden md:block"></div>
-                </div>
 
                 <!-- Project 3 -->
                 <div class="relative z-10 mb-32 md:mb-24">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                         <div class="md:text-right order-2 md:order-1">
                             <div class="card-container">
-                                <div class="card" id="card-3">
+                                <div class="card" id="card-2">
                                     <div class="card-face card-front">
                                         <div class="bg-gray-900 p-6 rounded-xl shadow-lg project-card">
                                             <button class="flip-button flip-button-left">
@@ -997,7 +944,7 @@
                         </div>
                         <div class="order-2 md:order-1">
                             <div class="card-container">
-                                <div class="card" id="card-4">
+                                <div class="card" id="card-3">
                                     <div class="card-face card-front">
                                         <div class="bg-gray-900 p-6 rounded-xl shadow-lg project-card">
                                             <button class="flip-button flip-button-right">
@@ -1037,8 +984,58 @@
                     <div class="timeline-dot hidden md:block"></div>
                 </div>
 
-                <!-- Project 5 (In Progress) -->
-                <div class="relative z-10">
+                <!-- Project 4 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="order-1 md:order-2">
+                            <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
+                                <img src="images/CaseAIPic.jpg" alt="CaseAI Project" class="h-full w-full object-cover">
+                            </div>
+                        </div>
+                        <div class="order-2 md:order-1">
+                            <div class="card-container">
+                                <div class="card" id="card-4">
+                                    <div class="card-face card-front">
+                                        <div class="bg-gray-900 p-6 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-right">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">CaseAI</h3>
+                                            <p class="mt-2 text-gray-300">After my robotic hand, I wanted to explore how AI could transform learning. I built CaseAI to solve a real problem I'd experienced myself: struggling to practice case interviews without access to experienced interviewers. The system conducts natural conversations, listens to responses through speech recognition, and provides detailed feedback on performance. Watching candidates improve their skills through AI-guided practice sessions showed me the potential of AI tools at a business / educational level.</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <div class="bg-gray-900 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-right">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3>Tech Stack</h3>
+                                            <p class="tech-details">
+                                                Built with GPT-4 for intelligent conversation management and Whisper for real-time speech-to-text processing. Features a progressive grading framework that evaluates performance across multiple interview stages, providing candidates with comprehensive feedback and scoring metrics. The system enables natural conversation flow while maintaining structured evaluation criteria.
+                                            </p>
+                                            <div class="hanging-sign">
+                                                <ul class="tech-stack-list">
+                                                    <li>React</li>
+                                                    <li>FastAPI</li>
+                                                    <li>NLP</li>
+                                                    <li>Conversational AI</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-dot hidden md:block"></div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="relative z-10 mb-32 md:mb-24">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                         <div class="md:text-right order-2 md:order-1">
                             <div class="card-container">
@@ -1050,11 +1047,8 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                 </svg>
                                             </button>
-                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">Bipedal Robot</h3>
-                                            <p class="mt-2 text-gray-300">Inspired by Nvidia and Disney's collaboration "Blue," I'm currently developing my most technically challenging project yet: a bipedal robot. This project represents everything I've learned about robotics, computer vision, and control systems, pushing me to new heights in mechanical design and AI integration. While still in development, this project embodies my commitment to creating increasingly sophisticated robotic systems.</p>
-                                            <div class="mt-4 flex gap-4 md:justify-end">
-                                                <span class="text-blue-400">In Development</span>
-                                            </div>
+                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">AI Powered Voice Receptionist</h3>
+                                            <p class="mt-2 text-gray-300">My first automation project where I created a functioning AI voice receptionist with Vapi and n8n. This project marked my entry into the world of business automation, combining voice AI technology with workflow automation to create a seamless customer experience. Building this system taught me how AI can streamline business operations and improve customer service efficiency.</p>
                                         </div>
                                     </div>
                                     <div class="card-face card-back">
@@ -1064,7 +1058,18 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                 </svg>
                                             </button>
-                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">Work In Progress...</h3>
+                                            <h3>Tech Stack</h3>
+                                            <p class="tech-details">
+                                                Built with Vapi for AI voice processing and n8n for workflow automation. The system handles incoming calls, processes customer requests, and automates responses and routing for efficient customer service operations.
+                                            </p>
+                                            <div class="hanging-sign">
+                                                <ul class="tech-stack-list">
+                                                    <li>Vapi</li>
+                                                    <li>n8n</li>
+                                                    <li>Voice AI</li>
+                                                    <li>Automation</li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1072,12 +1077,66 @@
                         </div>
                         <div class="order-1 md:order-2">
                             <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
-                                <img src="images/Blue.jpg" alt="Bipedal Robot Concept" class="h-full w-full object-cover">
+                                <img src="images/n8nWorkflow.jpg" alt="n8n Workflow" class="h-full w-full object-cover">
                             </div>
                         </div>
                     </div>
                     <div class="timeline-dot hidden md:block"></div>
                 </div>
+
+                <!-- Project 6 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="order-1 md:order-2">
+                            <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
+                                <video class="h-full w-full object-cover" controls muted>
+                                    <source src="images/AwzMemoPortfolioVid.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        </div>
+                        <div class="order-2 md:order-1">
+                            <div class="card-container">
+                                <div class="card" id="card-6">
+                                    <div class="card-face card-front">
+                                        <div class="bg-gray-900 p-6 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-right">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">Investment Memo Automation</h3>
+                                            <p class="mt-2 text-gray-300">During my internship, I built an automated system that scoured the internet with Perplexity Deep Research for any relevant information regarding the company at hand and used RAG to gather insights from internal documents. I created a system that produced consistent, high-quality reports in a standardized format that the investment team could immediately use for decision-making. This project showed me that very complex automations can produce professional-grade outputs that rival human work while maintaining consistency and efficiency.</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <div class="bg-gray-900 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-right">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3>Tech Stack</h3>
+                                            <p class="tech-details">
+                                                Built with Perplexity Deep Research for comprehensive data gathering and RAG to process internal documents. The system generates standardized investment memos with consistent formatting and quality, significantly reducing research time for the investment team.
+                                            </p>
+                                            <div class="hanging-sign">
+                                                <ul class="tech-stack-list">
+                                                    <li>Web Scraping</li>
+                                                    <li>RAG</li>
+                                                    <li>Python</li>
+                                                    <li>Document Processing</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-dot hidden md:block"></div>
+                </div>
+
             </div>
         </div>
     </section>
