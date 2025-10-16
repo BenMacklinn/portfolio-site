@@ -257,6 +257,12 @@
             overflow: visible;
         }
 
+        @media (max-width: 768px) {
+            .timeline-container {
+                padding-top: 2rem;
+            }
+        }
+
         .timeline-container > div.relative:last-child {
             margin-bottom: 6rem !important;
             overflow: visible;
@@ -295,7 +301,7 @@
             .flip-button { display: block !important; top: 1rem !important; right: 1rem !important; bottom: auto !important; left: auto !important; }
             .hanging-sign { display: none !important; }
             .timeline-container > div.relative { margin-bottom: 12rem !important; }
-            #projects { padding-top: 100vh !important; }
+            #projects { padding-top: 2rem !important; }
             .card-back .project-card::before,
             .card-back .project-card::after {
                 display: none !important;
