@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects - Ben Macklin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline-container::before {
+                left: 0;
+            }
+        }
+
+        /* Card styles */
+        .project-card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: rgb(17, 24, 39);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px -10px rgba(255, 255, 255, 0.2);
+        }
+
+        .flip-card {
+            perspective: 1000px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: left;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        .flip-button {
+            position: absolute;
+            top: 1.5rem;
+            width: 24px;
+            height: 24px;
+            color: rgb(96, 165, 250);
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .flip-button svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .flip-button-left {
+            left: 1.5rem;
+        }
+
+        .flip-button-right {
+            right: 1.5rem;
+        }
+
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+        }
+
+        .card {
+            position: relative;
+            width: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            min-height: 100%;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: relative;
+            width: 100%;
+            min-height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .card-front {
+            transform: rotateY(0deg);
+        }
+
+        .card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transform: rotateY(180deg);
+            height: 100%;
+        }
+
+        .card-back .project-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+            height: 100%;
+            background: rgb(15, 19, 25);
+            border-radius: 1rem;
+            position: relative;
+        }
+
+        .card-back h3 {
+            text-align: center;
+            font-size: 1.75rem;
+            color: rgb(147, 197, 253);
+            margin-bottom: 0;
+        }
+
+        .card-back .project-card::before,
+        .card-back .project-card::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            width: 2px;
+            height: 10rem;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 1;
+        }
+
+        .card-back .project-card::before {
+            left: 33%;
+        }
+
+        .card-back .project-card::after {
+            right: 33%;
+        }
+
+        .hanging-sign {
+            position: absolute;
+            bottom: -12.5rem;
+            left: 0;
+            right: 0;
+            background: rgb(15, 19, 25);
+            padding: 1.5rem 2rem;
+            border-radius: 0.5rem;
+            margin: 0 1rem;
+            z-index: 2;
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+        }
+
+        .hanging-sign:hover,
+        .card-back:hover .hanging-sign {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px -10px rgba(255, 255, 255, 0.2);
+        }
+
+        .card-face:hover .project-card {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px -10px rgba(255, 255, 255, 0.2);
+        }
+
+        .tech-details {
+            margin-top: 1.5rem;
+            text-align: left;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            padding-bottom: 1rem;
+        }
+
+        .tech-stack-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .tech-stack-list li {
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .tech-stack-list li::before {
+            content: "•";
+            color: white;
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+
+        .timeline-container > div.relative {
+            margin-bottom: 8rem !important;
+            transition: margin 0.6s ease-out;
+        }
+
+        .timeline-container > div.relative.needs-space {
+            margin-bottom: var(--dynamic-space) !important;
+        }
+
+        .timeline-container > div.relative.initial-expand {
+            margin-bottom: var(--expanded-space) !important;
+        }
+
+        #projects {
+            min-height: 150vh;
+            padding-top: 0;
+            padding-bottom: 8rem;
+            overflow: visible !important;
+        }
+
+        .timeline-container {
+            padding-top: 4rem;
+            position: relative;
+            overflow: visible;
+        }
+
+        .timeline-container > div.relative:last-child {
+            margin-bottom: 6rem !important;
+            overflow: visible;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1.5rem;
+            height: 1.5rem;
+            background: white;
+            border-radius: 50%;
+            border: 3px solid black;
+            z-index: 25;
+            box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.4);
+            transition: opacity 0.3s ease;
+        }
+
+        .timeline-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1rem;
+            height: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            #particleCanvas { height: 130vh !important; }
+            .flip-button { display: block !important; top: 1rem !important; right: 1rem !important; bottom: auto !important; left: auto !important; }
+            .hanging-sign { display: none !important; }
+            .timeline-container > div.relative { margin-bottom: 12rem !important; }
+            #projects { padding-top: 100vh !important; }
+            .card-back .project-card::before,
+            .card-back .project-card::after {
+                display: none !important;
+            }
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        section {
+            overflow: visible !important;
+            position: relative;
+        }
+
+        #projects {
+            isolation: isolate;
+        }
+
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden !important;
+            position: relative;
+        }
+
+        .journey-title {
+            color: rgb(96, 165, 250);
+            position: relative;
+            display: inline-block;
+            padding: 0 1rem;
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <canvas id="starryBackground" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;"></canvas>
+    <!-- Full Page Overlay -->
+    <div class="fixed inset-0 bg-black/90" style="z-index: 1;"></div>
+    
+    <!-- Header -->
+    <header class="relative z-20 p-0" style="background: transparent;">
+        <div class="max-w-6xl mx-auto flex justify-start items-center p-4">
+            <!-- Back Arrow -->
+            <a href="index.html" class="text-blue-400 hover:text-blue-300 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- Projects Timeline Section -->
+    <section id="projects" class="relative pt-0 pb-20 px-4 overflow-visible" style="background: transparent; z-index: 10;">
+        <div class="max-w-6xl mx-auto">
+            <!-- Headshot above My Journey -->
+            <div class="flex justify-center mb-16 relative z-30">
+                <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-blue-400 shadow-2xl">
+                    <img src="images/Profile.jpg" alt="Ben Macklin" class="w-full h-full object-cover">
+                </div>
+            </div>
+            
+            <div class="flex justify-center mb-16 relative z-30">
+                <h1 class="text-4xl font-bold text-center text-blue-400 journey-title">My Journey</h1>
+            </div>
+            <div class="timeline-container relative">
+                <!-- Project 1 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right order-2 md:order-1">
+                            <div class="card-container">
+                                <div class="card" id="card-1">
+                                    <div class="card-face card-front">
+                                        <div class="bg-gray-900 p-6 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-left">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">Kitchen Vision Alert System</h3>
+                                            <p class="mt-2 text-gray-300">My journey into computer vision began with a common roommate challenge - dirty dishes. I developed an alert system that could detect when dishes were left on the counter, and by who, sending friendly reminders to keep our space clean. This project sparked my fascination with computer vision's potential to solve everyday problems, setting me on a path that would grow far beyond simple detection systems.</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <div class="bg-gray-900 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-left">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3>Tech Stack</h3>
+                                            <p class="tech-details">
+                                                Captured live video feed from QuickTime Player and applied real-time contour-based object tracking using OpenCV at around 30 FPS. Although this approach worked initially for detecting dish placements, pure contour tracking proved inefficient under complex backgrounds and varied lighting conditions.
+                                            </p>
+                                            <div class="hanging-sign">
+                                                <ul class="tech-stack-list">
+                                                    <li>Python</li>
+                                                    <li>OpenCV</li>
+                                                    <li>QuickTime Player</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-1 md:order-2">
+                            <div class="space-y-4">
+                                <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
+                                    <video class="h-full w-full object-cover" controls muted>
+                                        <source src="images/Kitchen.mp4" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-dot hidden md:block"></div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right order-2 md:order-1">
+                            <div class="card-container">
+                                <div class="card" id="card-2">
+                                    <div class="card-face card-front">
+                                        <div class="bg-gray-900 p-6 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-left">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">Gesture-Controlled Smart Lighting</h3>
+                                            <p class="mt-2 text-gray-300">Ready to bridge the gap between software and hardware, I created a system that controlled my room's LED lights through simple hand gestures. With just a pinch of my fingers, I could turn lights on/off and cycle through colors. This project marked my first step into the physical world, combining computer vision with real-world hardware control.</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <div class="bg-gray-900 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-left">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3>Tech Stack</h3>
+                                            <p class="tech-details">
+                                                Utilized MediaPipe's 21-point hand tracking at ~30 FPS to capture gesture coordinates. Serialized 3D gesture vectors over UART at 115200 baud, achieving sub-30 ms end-to-end latency. LED updates run at 60 Hz, enabling smooth brightness and color transitions.
+                                            </p>
+                                            <div class="hanging-sign">
+                                                <ul class="tech-stack-list">
+                                                    <li>Python</li>
+                                                    <li>MediaPipe</li>
+                                                    <li>OpenCV</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-1 md:order-2">
+                            <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
+                                <img src="images/LEDLights.jpg" alt="Smart Lighting Control" class="h-full w-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-dot hidden md:block"></div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="order-1 md:order-2">
+                            <div class="flex justify-center">
+                                <div class="w-[33vh] max-w-full">
+                                    <div class="aspect-[9/16] overflow-hidden rounded-xl shadow-lg bg-gray-900">
+                                        <video class="h-full w-full object-contain" controls muted playsinline>
+                                            <source src="images/IMG_3431 3.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-2 md:order-1">
+                            <div class="card-container">
+                                <div class="card" id="card-3">
+                                    <div class="card-face card-front">
+                                        <div class="bg-gray-900 p-6 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-right">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">Robotic Hand</h3>
+                                            <p class="mt-2 text-gray-300">My most ambitious project yet combined everything I'd learned: a 3D-printed robotic hand that mirrors human hand movements in real-time. This project merged computer vision, hardware control, and some mechanical learning into one cohesive system. Watching the robotic hand move in perfect sync with my own was a defining moment that confirmed my passion for creating robots that can interact naturally with humans.</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <div class="bg-gray-900 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-right">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3>Tech Stack</h3>
+                                            <p class="tech-details">
+                                                Assembled from open-source STL models providing 5 degrees of freedom. MediaPipe hand tracking supplies 21 3D landmarks at ~30 FPS; finger open/closed states are determined by comparing tip-to-base landmark distances. Servo commands run at 100 Hz, achieving sub-15 ms actuation latency.
+                                            </p>
+                                            <div class="hanging-sign">
+                                                <ul class="tech-stack-list">
+                                                    <li>Python</li>
+                                                    <li>MediaPipe</li>
+                                                    <li>OpenCV</li>
+                                                    <li>Fusion 360</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-dot hidden md:block"></div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="order-1 md:order-2">
+                            <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
+                                <img src="images/CaseAIPic.jpg" alt="CaseAI Project" class="h-full w-full object-cover">
+                            </div>
+                        </div>
+                        <div class="order-2 md:order-1">
+                            <div class="card-container">
+                                <div class="card" id="card-4">
+                                    <div class="card-face card-front">
+                                        <div class="bg-gray-900 p-6 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-right">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">CaseAI</h3>
+                                            <p class="mt-2 text-gray-300">After my robotic hand, I wanted to explore how AI could transform learning. I built CaseAI to solve a real problem I'd experienced myself: struggling to practice case interviews without access to experienced interviewers. The system conducts natural conversations, listens to responses through speech recognition, and provides detailed feedback on performance. Watching candidates improve their skills through AI-guided practice sessions showed me the potential of AI tools at a business / educational level.</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <div class="bg-gray-900 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-right">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3>Tech Stack</h3>
+                                            <p class="tech-details">
+                                                Built with GPT-4 for intelligent conversation management and Whisper for real-time speech-to-text processing. Features a progressive grading framework that evaluates performance across multiple interview stages, providing candidates with comprehensive feedback and scoring metrics. The system enables natural conversation flow while maintaining structured evaluation criteria.
+                                            </p>
+                                            <div class="hanging-sign">
+                                                <ul class="tech-stack-list">
+                                                    <li>React</li>
+                                                    <li>FastAPI</li>
+                                                    <li>NLP</li>
+                                                    <li>Conversational AI</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-dot hidden md:block"></div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right order-2 md:order-1">
+                            <div class="card-container">
+                                <div class="card" id="card-5">
+                                    <div class="card-face card-front">
+                                        <div class="bg-gray-900 p-6 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-left">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">AI Powered Voice Receptionist</h3>
+                                            <p class="mt-2 text-gray-300">My first automation project where I created a functioning AI voice receptionist with Vapi and n8n. This project marked my entry into the world of business automation, combining voice AI technology with workflow automation to create a seamless customer experience. Building this system taught me how AI can streamline business operations and improve customer service efficiency.</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <div class="bg-gray-900 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-left">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3>Tech Stack</h3>
+                                            <p class="tech-details">
+                                                Built with Vapi for AI voice processing and n8n for workflow automation. The system handles incoming calls, processes customer requests, and automates responses and routing for efficient customer service operations.
+                                            </p>
+                                            <div class="hanging-sign">
+                                                <ul class="tech-stack-list">
+                                                    <li>Vapi</li>
+                                                    <li>n8n</li>
+                                                    <li>Voice AI</li>
+                                                    <li>Automation</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-1 md:order-2">
+                            <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
+                                <img src="images/n8nWorkflow.jpg" alt="n8n Workflow" class="h-full w-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-dot hidden md:block"></div>
+                </div>
+
+                <!-- Project 6 -->
+                <div class="relative z-10 mb-32 md:mb-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="order-1 md:order-2">
+                            <div class="aspect-video overflow-hidden rounded-xl shadow-lg">
+                                <video class="h-full w-full object-cover" controls muted>
+                                    <source src="images/AwzMemoPortfolioVid.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        </div>
+                        <div class="order-2 md:order-1">
+                            <div class="card-container">
+                                <div class="card" id="card-6">
+                                    <div class="card-face card-front">
+                                        <div class="bg-gray-900 p-6 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-right">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3 class="text-2xl font-bold text-blue-400 mt-2">Investment Memo Automation</h3>
+                                            <p class="mt-2 text-gray-300">During my internship, I built an automated system that scoured the internet with Perplexity Deep Research for any relevant information regarding the company at hand and used RAG to gather insights from internal documents. I created a system that produced consistent, high-quality reports in a standardized format that the investment team could immediately use for decision-making. This project showed me that very complex automations can produce professional-grade outputs that rival human work while maintaining consistency and efficiency.</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <div class="bg-gray-900 rounded-xl shadow-lg project-card">
+                                            <button class="flip-button flip-button-right">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                </svg>
+                                            </button>
+                                            <h3>Tech Stack</h3>
+                                            <p class="tech-details">
+                                                Built with Perplexity Deep Research for comprehensive data gathering and RAG to process internal documents. The system generates standardized investment memos with consistent formatting and quality, significantly reducing research time for the investment team.
+                                            </p>
+                                            <div class="hanging-sign">
+                                                <ul class="tech-stack-list">
+                                                    <li>Web Scraping</li>
+                                                    <li>RAG</li>
+                                                    <li>Python</li>
+                                                    <li>Document Processing</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-dot hidden md:block"></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Restore robust updateSpacing logic for timeline cards
+            function updateSpacing(timelineItem, isFlipped) {
+                if (!timelineItem) return;
+                if (isFlipped) {
+                    const card = timelineItem.querySelector('.card');
+                    const hangingSign = card.querySelector('.hanging-sign');
+                    const nextItem = timelineItem.nextElementSibling;
+                    if (hangingSign && nextItem) {
+                        // Ensure DOM is updated
+                        void timelineItem.offsetHeight;
+                        // Get the exact positions
+                        const signRect = hangingSign.getBoundingClientRect();
+                        const nextCardRect = nextItem.querySelector('.card').getBoundingClientRect();
+                        // If there's an overlap or insufficient gap
+                        const currentGap = nextCardRect.top - signRect.bottom;
+                        const minGap = 20; // Minimum gap in pixels
+                        if (currentGap < minGap) {
+                            // How much additional space we need
+                            const additionalSpace = minGap - currentGap;
+                            // Get current margin in pixels
+                            const currentMargin = parseInt(window.getComputedStyle(timelineItem).marginBottom);
+                            // New margin = current + additional space needed (convert px to rem)
+                            const newMargin = (currentMargin + additionalSpace) / 16;
+                            // Apply the spacing
+                            timelineItem.style.setProperty('--dynamic-space', newMargin + 'rem');
+                            timelineItem.classList.add('needs-space');
+                        } else {
+                            timelineItem.classList.remove('needs-space');
+                            timelineItem.style.removeProperty('--dynamic-space');
+                        }
+                    }
+                } else {
+                    timelineItem.classList.remove('needs-space');
+                    timelineItem.style.removeProperty('--dynamic-space');
+                }
+            }
+
+            // Add click event listeners to project cards for flipping and spacing
+            document.querySelectorAll('.project-card').forEach((card) => {
+                card.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // Find the parent .card element that needs to be flipped
+                    const parentCard = card.closest('.card');
+                    const timelineItem = parentCard.closest('.relative');
+                    // Toggle flipped state
+                    const willBeFlipped = !parentCard.classList.contains('flipped');
+                    parentCard.classList.toggle('flipped');
+                    // Update spacing after animation completes
+                    setTimeout(() => {
+                        updateSpacing(timelineItem, willBeFlipped);
+                    }, 300);
+                });
+            });
+
+            // Update on resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    document.querySelectorAll('.timeline-container > div.relative').forEach(item => {
+                        const card = item.querySelector('.card');
+                        if (card && card.classList.contains('flipped')) {
+                            updateSpacing(item, true);
+                        } else {
+                            updateSpacing(item, false);
+                        }
+                    });
+                }, 100);
+            });
+        });
+    </script>
+
+    <script>
+        // Starry background
+        const canvas = document.getElementById('starryBackground');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const stars = [];
+        const starCount = 500; // Much more visible count
+
+        // Create stars
+        for (let i = 0; i < starCount; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 3 + 1, // Much larger stars (1-4px)
+                opacity: Math.random() * 0.4 + 0.6, // Very visible (0.6-1.0)
+                twinkleSpeed: Math.random() * 0.02
+            });
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.fill();
+                
+                // Twinkle effect
+                star.opacity += star.twinkleSpeed;
+                if (star.opacity > 1 || star.opacity < 0.5) {
+                    star.twinkleSpeed = -star.twinkleSpeed;
+                }
+            });
+            
+            requestAnimationFrame(drawStars);
+        }
+
+        drawStars();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
